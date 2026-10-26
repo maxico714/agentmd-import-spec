@@ -1,0 +1,11 @@
+{
+  "order": [
+    "AGENTS.md"
+  ],
+  "errors": [
+    {
+      "rule": "E_REMOTE",
+      "path": "https://example.com/agents.md"
+    }
+  ]
+}

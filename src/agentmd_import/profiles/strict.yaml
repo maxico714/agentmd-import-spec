@@ -1,0 +1,8 @@
+name: strict
+max_depth: 32
+max_bytes: 1048576
+allow_absolute: false
+allow_unc: false
+allow_home: false
+allow_remote: false
+source: "agentmd-import-spec v0.1 proposal: relative paths only, contained in the root directory"

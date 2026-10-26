@@ -1,0 +1,9 @@
+{
+  "order": [],
+  "errors": [
+    {
+      "rule": "E_ENCODING",
+      "path": "AGENTS.md"
+    }
+  ]
+}

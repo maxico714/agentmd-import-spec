@@ -1,0 +1,8 @@
+name: claude-4hop
+max_depth: 4
+max_bytes: 1048576
+allow_absolute: true
+allow_unc: false
+allow_home: true
+allow_remote: false
+source: "https://code.claude.com/docs/en/memory (accessed 2026-10-25): @path imports, relative to the importing file, maximum depth of four hops; cycle and missing-file behavior unspecified by the docs"

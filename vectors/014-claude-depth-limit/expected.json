@@ -1,0 +1,16 @@
+{
+  "profile": "claude-4hop",
+  "order": [
+    "AGENTS.md",
+    "l1.md",
+    "l2.md",
+    "l3.md",
+    "l4.md"
+  ],
+  "errors": [
+    {
+      "rule": "E_DEPTH",
+      "path": "l5.md"
+    }
+  ]
+}

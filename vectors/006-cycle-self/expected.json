@@ -1,0 +1,12 @@
+{
+  "order": [
+    "AGENTS.md",
+    "a.md"
+  ],
+  "errors": [
+    {
+      "rule": "E_CYCLE",
+      "path": "a.md"
+    }
+  ]
+}

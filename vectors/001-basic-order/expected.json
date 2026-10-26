@@ -1,0 +1,9 @@
+{
+  "order": [
+    "AGENTS.md",
+    "a.md",
+    "docs/b.md",
+    "c.md"
+  ],
+  "errors": []
+}

@@ -1,0 +1,11 @@
+{
+  "order": [
+    "AGENTS.md"
+  ],
+  "errors": [
+    {
+      "rule": "E_PATH",
+      "path": "C:\\temp\\agents.md"
+    }
+  ]
+}

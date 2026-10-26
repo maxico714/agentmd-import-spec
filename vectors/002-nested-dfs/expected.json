@@ -1,0 +1,9 @@
+{
+  "order": [
+    "AGENTS.md",
+    "a/x.md",
+    "a/z.md",
+    "b/y.md"
+  ],
+  "errors": []
+}
