@@ -64,12 +64,17 @@ b.md
 E_CYCLE: a.md: import cycle detected: AGENTS.md -> a.md -> b.md -> a.md
 ```
 
-Run the conformance suite against the shipped resolver:
+Run the conformance suite against the shipped resolver from a source checkout
+or source distribution:
 
 ```console
 $ agentmd-import verify vectors
 27/27 vectors passed
 ```
+
+The vectors are conformance fixtures. They are included in the GitHub source and
+source distribution, but not installed inside the wheel; pass your own vector
+directory when the package was installed from a wheel.
 
 JSON output, for tooling:
 
