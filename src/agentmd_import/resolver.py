@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import stat
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -127,21 +128,30 @@ def _visit(
 def _read(path: Path, root_dir: Path, profile: Profile) -> str:
     display = _display(path, root_dir)
     try:
-        size = path.stat().st_size
+        info = path.stat()
     except FileNotFoundError:
         raise ResolveError("E_MISSING", display, "imported file does not exist") from None
     except OSError as exc:
         raise ResolveError("E_PATH", display, str(exc)) from None
-    if size > profile.max_bytes:
+    if not stat.S_ISREG(info.st_mode):
+        raise ResolveError("E_PATH", display, "imported path is not a regular file")
+    if info.st_size > profile.max_bytes:
         raise ResolveError(
-            "E_SIZE", display, f"file is {size} bytes (max_bytes={profile.max_bytes})"
+            "E_SIZE", display, f"file is {info.st_size} bytes (max_bytes={profile.max_bytes})"
         )
     try:
-        data = path.read_bytes()
+        with path.open("rb") as handle:
+            data = handle.read(profile.max_bytes + 1)
     except FileNotFoundError:
         raise ResolveError("E_MISSING", display, "imported file does not exist") from None
     except OSError as exc:
         raise ResolveError("E_PATH", display, str(exc)) from None
+    if len(data) > profile.max_bytes:
+        raise ResolveError(
+            "E_SIZE",
+            display,
+            f"file exceeds max_bytes={profile.max_bytes} (size changed while reading)",
+        )
     try:
         return data.decode("utf-8-sig")
     except UnicodeDecodeError as exc:

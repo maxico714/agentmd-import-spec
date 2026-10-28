@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 VECTORS = Path(__file__).resolve().parents[2] / "vectors"
 
@@ -104,6 +107,15 @@ def test_profiles_command_lists_builtins() -> None:
         "claude-4hop: max_depth=4",
         "strict: max_depth=32",
     ]
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows character devices are Windows-only")
+def test_windows_device_import_fails_closed_without_reading(tmp_path: Path) -> None:
+    (tmp_path / "AGENTS.md").write_text("@NUL\n", encoding="utf-8")
+    completed = run("resolve", str(tmp_path / "AGENTS.md"))
+    assert completed.returncode == 2
+    assert "E_PATH" in completed.stderr
+    assert "regular file" in completed.stderr
 
 
 def test_missing_subcommand_is_a_usage_error() -> None:

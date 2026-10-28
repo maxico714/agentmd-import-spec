@@ -21,7 +21,8 @@ result. Circuit breaker: 3 failures per gate → stop, re-research, log in STATE
 - [x] `ruff check .` → All checks passed.
 - [x] `ruff format --check .` → 20 files already formatted.
 - [x] `mypy` (strict, `src`) → Success: no issues found in 7 source files.
-- [x] `pytest --collect-only -q` → 97 tests collected.
+- [x] `pytest --collect-only -q` → 100 tests collected (97 at first release; three
+      release-QA regression tests added).
 
 ## Gate 2 — L1 units (rules R1–R12)
 
@@ -83,8 +84,9 @@ Not started; requires owner action to contact upstream.
 ## Gate 8 — L4 clean env
 
 - [x] Wheel built (13,852 bytes) and sdist (15,490 bytes); `twine check` PASSED.
-- [x] Clean venv + wheel install: `--version`, `profiles`, `resolve`, `verify` all
-      succeed.
+- [x] Clean venv + wheel install: `--version`, `profiles`, `resolve` succeed, and
+      `verify vectors` passes against the checkout. The vectors are repository fixtures
+      and are not packaged in the wheel.
 - [x] Fresh clone → `pip install -e ".[dev]"` → pytest and vector suite (see
       `docs/EVIDENCE.md`).
 

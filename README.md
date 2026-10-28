@@ -213,7 +213,7 @@ python -m pytest
 agentmd-import verify vectors
 ```
 
-Local verification (2026-10-26, Python 3.12.10 on Windows): 97 tests pass, 27/27
+Local verification (2026-10-26, Python 3.12.10 on Windows): 100 tests pass, 27/27
 vectors pass, ruff and strict mypy clean. CI runs the same checks on Ubuntu and Windows
 across Python 3.10, 3.12, and 3.13.
 

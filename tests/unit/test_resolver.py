@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from agentmd_import.profile import Profile
-from agentmd_import.resolver import ResolveResult, resolve
+from agentmd_import.resolver import ResolveError, ResolveResult, _read, resolve
 
 STRICT = Profile(name="strict")
 
@@ -275,3 +275,45 @@ def test_symlink_escape_is_traversal(tmp_path: Path) -> None:
     except (OSError, NotImplementedError):
         pytest.skip("symlinks are not available on this host")
     assert rules(resolve(root, STRICT)) == [("E_TRAVERSAL", "link.md")]
+
+
+def test_directory_is_not_a_regular_file(tmp_path: Path) -> None:
+    (tmp_path / "sub").mkdir()
+    with pytest.raises(ResolveError) as excinfo:
+        _read(tmp_path / "sub", tmp_path, STRICT)
+    assert excinfo.value.rule == "E_PATH"
+    assert "regular file" in excinfo.value.detail
+
+
+def test_size_cap_is_enforced_while_reading(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = tmp_path / "a.md"
+    target.write_bytes(b"x" * 11)
+    profile = Profile(name="tiny", max_bytes=10)
+    real_stat = Path.stat
+
+    def small_stat(self: Path, *args: object, **kwargs: object) -> os.stat_result:
+        info = real_stat(self, *args, **kwargs)  # type: ignore[arg-type]
+        if self == target:
+            return os.stat_result(
+                (
+                    info.st_mode,
+                    info.st_ino,
+                    info.st_dev,
+                    info.st_nlink,
+                    info.st_uid,
+                    info.st_gid,
+                    1,
+                    info.st_atime,
+                    info.st_mtime,
+                    info.st_ctime,
+                )
+            )
+        return info
+
+    monkeypatch.setattr(Path, "stat", small_stat)
+    with pytest.raises(ResolveError) as excinfo:
+        _read(target, tmp_path, profile)
+    assert excinfo.value.rule == "E_SIZE"
+    assert "max_bytes=10" in excinfo.value.detail
